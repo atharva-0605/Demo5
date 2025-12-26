@@ -1,10 +1,10 @@
 const http = require('http');
 const fs = require('fs'); 
-const PORT = 3001;
 
-http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'text/html');
-    if (req.url === '/home') {
+const app = http.createServer((req, res) => {
+  const { method, url } = req;
+  res.setHeader('Content-Type', 'text/html');
+    if (req.url === '/home' && req.method === 'GET') {
         res.statusCode = 200;
         res.write('<h1>Home Page</h1>')
         res.write(`
@@ -89,7 +89,7 @@ body {
 </html>
             `)
         return res.end();    
-    } else if (req.url === '/about') {
+    } else if (req.url === '/about' && req.method === 'GET') {
         res.statusCode = 200;
         res.write('<h1>About Page</h1>')
         res.write(`
@@ -157,7 +157,7 @@ body {
 </html>
             `)
         return res.end();
-    } else if (req.url === '/services') {
+    } else if (req.url === '/services' && req.method === 'GET') {
         res.statusCode = 200;
         res.write('<h1>Services Page</h1>')
         res.write(`
@@ -300,7 +300,7 @@ body {
 </html>
             `)
         return res.end();
-    } else if (req.url === '/contact') {
+    } else if (req.url === '/contact' && req.method === 'GET') {
         res.statusCode = 200;
         res.write('<h1>Contact Page</h1>')
         res.write(`
@@ -315,14 +315,13 @@ body {
         body += chunk; 
     });
     req.on('end', () => {
-        fs.appendFile('user-data.txt','Atharva Pawar',() => {  
+        fs.writeFileSync('user-data.txt', 'Atharva Pawar');  
             res.statusCode = 302;
             res.setHeader('Location', '/redirected');
             res.end();
-        });
     });
     return;
-    }else if (req.url === '/redirected') {
+    }else if (req.url === '/redirected' && req.method === 'GET') {
     res.statusCode = 200;
     res.write('<h1>Redirected</h1><a href="/home">Go Home</a>')
     return res.end();
@@ -368,6 +367,9 @@ nav a{
         `)
         res.end();
     }
-}).listen(PORT, () => {
+})
+
+const PORT = 3000;
+app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
