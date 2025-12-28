@@ -2,11 +2,8 @@ const http = require('http');
 const fs = require('fs'); 
 
 const app = http.createServer((req, res) => {
-  const { method, url } = req;
-  res.setHeader('Content-Type', 'text/html');
-    if (req.url === '/home' && req.method === 'GET') {
+    if (req.url === '/home') {
         res.statusCode = 200;
-        res.write('<h1>Home Page</h1>')
         res.write(`
             <!DOCTYPE html>
 <html lang="en">
@@ -74,6 +71,7 @@ body {
 }
 </style>
 <body>
+<h1>Home Page</h1>
     <section id="home" class="hero">
             <div class="hero-content">
       <h1>Revitalize Your Clothes with Expert <span> Services!</span></h1>
@@ -89,9 +87,8 @@ body {
 </html>
             `)
         return res.end();    
-    } else if (req.url === '/about' && req.method === 'GET') {
+    } else if (req.url === '/about') {
         res.statusCode = 200;
-        res.write('<h1>About Page</h1>')
         res.write(`
             <!DOCTYPE html>
 <html lang="en">
@@ -136,6 +133,7 @@ body {
 }
 </style>
 <body>
+<h1>About Page</h1>
     <section id="services" class="achievements">
     <h2>Our Achievements</h2>
     <div class="stats">
@@ -157,9 +155,8 @@ body {
 </html>
             `)
         return res.end();
-    } else if (req.url === '/services' && req.method === 'GET') {
+    } else if (req.url === '/services') {
         res.statusCode = 200;
-        res.write('<h1>Services Page</h1>')
         res.write(`
             <!DOCTYPE html>
 <html lang="en">
@@ -240,6 +237,7 @@ body {
 }
 </style>
 <body>
+<h1>Services Page</h1>
     <div class="booking-section">
   <div class="services-list">
     <h2>Our Services</h2>
@@ -300,16 +298,26 @@ body {
 </html>
             `)
         return res.end();
-    } else if (req.url === '/contact' && req.method === 'GET') {
+    } else if (req.url === '/contact') {
         res.statusCode = 200;
-        res.write('<h1>Contact Page</h1>')
         res.write(`
+          <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Contact Page</h1>
             <form action="/submitted-data" method="POST">
             <button type="submit">Submit Data</button>
             </form>
+</body>
+</html>
             `)
         return res.end();
-    }else if (req.method === 'POST' && req.url === '/submitted-data') {
+    }else if (req.method === 'POST') {
     let body = '';
     req.on('data', (chunk) => { 
         body += chunk; 
@@ -318,10 +326,9 @@ body {
         fs.writeFileSync('user-data.txt', 'Atharva Pawar');  
             res.statusCode = 302;
             res.setHeader('Location', '/redirected');
-            res.end();
+            return res.end();
     });
-    return;
-    }else if (req.url === '/redirected' && req.method === 'GET') {
+    }else if (req.url === '/redirected' ) {
     res.statusCode = 200;
     res.write('<h1>Redirected</h1><a href="/home">Go Home</a>')
     return res.end();
@@ -373,3 +380,4 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
